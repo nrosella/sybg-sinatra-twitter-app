@@ -1,8 +1,10 @@
-class GetTweets
+class GetTweetsByHour
   attr_reader :handle
+  attr_accessor :hours
 
-  def initialize(handle)
+  def initialize(handle, hours)
     @handle = handle
+    @hours = hours
   end
 
   TWITTER = Twitter::REST::Client.new do |config|
@@ -13,18 +15,16 @@ class GetTweets
     config.access_token_secret = "XSQKNN50anJvOb60OwqpGORBLuyUf7uHsnRwS7PjO9Ddc"
   end
 
-  # def get_search_results
-  #   twitter_search_results = []
-  #   TWITTER.search(handle).each do |tweet|
-  #     twitter_search_results << [tweet.user.name, tweet.text]
-  #   end
-  #   twitter_search_results
-  # end
-
-  def display_timeline
+  def roll_back_time
     timeline_search_results = []
-    TWITTER.home_timeline.each do |tweet|
-      timeline_search_results << [tweet.user.name, tweet.text]
+    hours_converted = hours * 60 * 60
+    time = Time.now - hours_converted
+    time_plus_two = time + 7200
+    
+    TWITTER.home_timeline(:count => 200).each do |tweet|
+      if tweet.created_at > time 
+        timeline_search_results << [tweet.user.name, tweet.text]
+      end
     end
     timeline_search_results
   end
