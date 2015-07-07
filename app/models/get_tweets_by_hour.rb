@@ -19,10 +19,9 @@ class GetTweetsByHour
     timeline_search_results = []
     hours_converted = hours * 60 * 60
     time = Time.now - hours_converted
-    time_plus_two = time + 7200
     
-    TWITTER.home_timeline(:count => 200).each do |tweet|
-      if tweet.created_at > time 
+    TWITTER.home_timeline(:count => 10).each do |tweet|
+      if tweet.created_at > time
         timeline_search_results << [tweet.user.name, tweet.text]
       end
     end

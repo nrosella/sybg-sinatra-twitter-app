@@ -25,8 +25,21 @@ class GetTweets
     timeline_search_results = []
     TWITTER.home_timeline.each do |tweet|
       timeline_search_results << [tweet.user.name, tweet.text]
+      # binding.pry
     end
     timeline_search_results
+  end
+
+  def display_images
+    timeline_images = []
+    TWITTER.home_timeline.each do |tweet|
+      # binding.pry
+      if tweet.attrs[:entities][:media] != nil && tweet.attrs[:entities][:media].first[:type].include?("photo")
+        timeline_images << tweet.attrs[:entities][:media].first[:media_url]
+      end
+      
+    end
+    timeline_images
   end
 
 end
